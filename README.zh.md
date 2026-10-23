@@ -1,9 +1,25 @@
 # StateLens · UI 状态对比度工作台
 
+[English](README.md) · **简体中文**
+
 一个原创、零依赖的小型设计工具。作者：Liyan Chen。版本：0.1.0。
+
+[**在线体验 Demo**](https://statelens-design-lab.fuzzy-boar-2990.chatgpt.site) · [English guide](README.md)
+
+![StateLens 桌面概览：语义颜色编辑与明暗主题并排预览](docs/assets/overview.jpg)
 
 ## 它解决什么
 不是再做一个只比较两个色块的检查器，而是将语义颜色、明暗主题、交互状态和交付代码放在一起。差异化是待验证的工作流假设，不宣称首创，也不替代 Stark 等成熟产品。
+
+## 核心功能
+- 分别编辑明暗主题的 8 个语义 HEX 颜色。
+- 在可编辑组件中比较默认、悬停、焦点、错误和禁用状态。
+- 查看文字、控件边界和状态指示的对比度；禁用项明确标为豁免。
+- 复制或下载包含两套主题的 CSS / JSON。
+
+![真实错误状态截图：明暗主题表单与对比度矩阵](docs/assets/error-state.jpg)
+
+*以上为真实桌面浏览器截图，不是移动端截图或生成效果图。*
 
 ## 开始使用
 直接打开 dist/index.html（无需安装），或在 dist 目录运行 python3 -m http.server 8000，再访问 localhost:8000。所有编辑在当前标签页内存中进行，不上传输入、不使用分析服务；刷新会重置，请先导出。
@@ -54,3 +70,7 @@ node --check dist/app.js
 https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html
 https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html
 https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html
+
+## 许可
+
+[MIT 许可证](LICENSE) · Copyright © 2026 Liyan Chen。
