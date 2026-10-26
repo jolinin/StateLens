@@ -1,76 +1,80 @@
-# StateLens · UI 状态对比度工作台
+# StateLens 0.2
 
 [English](README.md) · **简体中文**
 
-一个原创、零依赖的小型设计工具。作者：Liyan Chen。版本：0.1.0。
+对比浅色、深色和不同组件状态下的配色。调整透明色、检查采集的文字样式，再导出 CSS 或 JSON。
 
-[**在线体验 Demo**](https://statelens-design-lab.fuzzy-boar-2990.chatgpt.site) · [English guide](README.md)
+[打开演示](https://statelens-design-lab.fuzzy-boar-2990.chatgpt.site)
 
-![StateLens 桌面概览：语义颜色编辑与明暗主题并排预览](docs/assets/overview.jpg)
+![StateLens 0.2 — 真实桌面浏览器截图](docs/assets/v02-zh.jpg)
 
-## 它解决什么
-不是再做一个只比较两个色块的检查器，而是将语义颜色、明暗主题、交互状态和交付代码放在一起。差异化是待验证的工作流假设，不宣称首创，也不替代 Stark 等成熟产品。
+## 本次实际改动
 
-## 核心功能
-- 分别编辑明暗主题的 8 个语义 HEX 颜色。
-- 在可编辑组件中比较默认、悬停、焦点、错误和禁用状态。
-- 查看文字、控件边界和状态指示的对比度；禁用项明确标为豁免。
-- 复制或下载包含两套主题的 CSS / JSON。
+- 支持显式 sRGB 透明色：HEX／透明 HEX／`rgb()`／`rgba()`。指定不透明底色后，按表面 → 填充 → 文字合成，计算前不取整。
+- 错误态可以叠加焦点。真实键盘聚焦会同步对应主题的焦点颜色行；复选框用于强制模拟两个主题。
+- 禁用示例仍显示实际比率和可读性改良建议，但规范状态始终为**豁免**而不是通过。示例先合成内部颜色，再模拟 40% 组透明度。
+- 在自己的真实页面中捕获一个选中文字元素的计算样式，导入本地 JSON；报告保留原始图层、来源信息和不支持效果。CSS 变量由浏览器计算样式解析，不是像素采样。
+- 加入版本化快照契约、共享计算核心、CLI、测试和示例 GitHub Actions。CI 只检查保存的颜色证据，不浏览或认证当前页面。
+- 中英文界面。本版**未内置 APCA**：可将合成后的不透明颜色复制到[官方研究工具](https://www.myndex.com/APCA/)，结合字体指导解读。Lc 不代表 WCAG 2 合规，也不把 APCA 的独立许可冒称为 MIT。
 
-![真实错误状态截图：明暗主题表单与对比度矩阵](docs/assets/error-state.jpg)
+## 运行与测试
 
-*以上为真实桌面浏览器截图，不是移动端截图或生成效果图。*
+测试及 CLI 使用 Node 20+。网页运行时无第三方依赖；jsdom 是**开发测试依赖**，不打入浏览器包。
 
-## 开始使用
-直接打开 dist/index.html（无需安装），或在 dist 目录运行 python3 -m http.server 8000，再访问 localhost:8000。所有编辑在当前标签页内存中进行，不上传输入、不使用分析服务；刷新会重置，请先导出。
-
-1. 在左侧切换 Light / Dark，编辑 #RGB 或 #RRGGBB。无效输入显示提示，预览与导出保留上一次有效值。
-2. 两个主题并排预览。输入框可编辑，按钮只演示交互，不提交数据。
-3. 切换 Default、Hover、Focus、Error、Disabled。Hover / Focus 是强制样式；真实鼠标与键盘交互也有效。Error 只作用于输入框、边框和错误文本；Disabled 只禁用输入框和按钮。
-4. 查看每个颜色配对的实际比率。结果用未舍入值判定，显示值保留两位。
-5. CSS 导出包含两套变量和 .sl-card、.sl-input、.sl-button、.sl-error 状态样式；JSON 导出包含两套颜色与阈值。支持复制与下载。复制受浏览器权限限制时自动选中代码供手动复制。
-
-## 复用示例
-引入导出的 statelens-tokens.css，使用：
-
-```html
-<section class="sl-card" data-theme="light">
-  <label for="name">项目名称</label>
-  <input id="name" class="sl-input" aria-describedby="error">
-  <p id="error" class="sl-error"></p>
-  <button class="sl-button">创建项目</button>
-</section>
+```sh
+npm ci
+npm test
+node tools/check-snapshot.cjs examples/snapshot.json
+python3 -m http.server 8000 --directory dist
 ```
 
-深色容器改为 data-theme="dark"。出错时给 input 添加 aria-invalid="true"，填写错误信息；禁用时使用原生 disabled。交付样式不负责业务校验和表单提交。
+打开服务地址即可。直接打开文件也可使用界面，但读取采集器源码可能需要 HTTP；可手动打开源码链接。配色和快照仅存于当前标签页，刷新重置，请先导出。
 
-## 判定范围与限制
-- sRGB 相对亮度与 WCAG 对比度公式，仅支持不透明纯 HEX 颜色。
-- 普通文本 AA ≥ 4.5:1，大文本 ≥ 3:1；大文本至少 24px 常规或约 18.7px 粗体。本工具样本文本按普通文本检查。
-- 必要的 UI 边界及状态标记通常需要与相邻颜色 ≥ 3:1；本样本计算边框/按钮/外侧焦点环与其外侧 surface 的配对。
-- 禁用控件属于对比度豁免，不标成通过；容器正文仍检查。
-- 焦点环颜色通过不代表焦点可见性、面积、遮挡或整个组件符合 WCAG。真实布局、透明度、图像、文字大小、键盘路径、语义及错误恢复仍需人工检查。
-- 不自动修复颜色，避免用单个“无障碍评分”掩盖实际语境。
+## 从真实文字元素捕获
 
-## 检查
-node tests/contrast.test.cjs
-node --check dist/app.js
+1. 在自己的页面中通过开发者工具选择**叶级文字元素** `$0`。先手动进入想检查的状态；采集器不点击、不聚焦、不强制状态。
+2. 审阅后粘贴 [dist/capture.js](dist/capture.js)，不要盲目粘贴陌生脚本。
+3. 填写真实的不透明画布底色，目视确认没有覆盖内容后执行：
 
-详见 QA.md。浏览器检查范围、不能验证的部分均记录，不用静态检查冒充完整交互验收。
+```js
+copy(JSON.stringify(StateLensCapture($0, {
+  backdrop: '#FFFFFF',
+  confirmUnobscured: true
+}), null, 2))
+```
 
-## 文件
-- dist/：完整零依赖应用
-- tests/：对比度纯函数测试
-- QA.md：实际验收范围
-- LICENSE：原创代码 MIT 许可
+4. 检查 JSON，再粘贴到 StateLens 本地分析。采集器不读取页面文字、网址、href 或选择器，不发送网络请求。导入 JSON 只作为数据，绝不执行其中代码。
 
-在线 Demo：https://statelens-design-lab.fuzzy-boar-2990.chatgpt.site
+未知背景、渐变／图片、阴影、遮罩、混合、组透明度、复杂裁切、生成内容及不支持的绘制几何会标为**无法判断**，不是通过。“无覆盖”来自用户声明，并非采集器证明。边框、图标、焦点环几何、读屏语义和状态覆盖不在快照检查范围内。采集策略刻意保守，即使视觉上简单也可能要求人工检查。
 
-## 参考标准
-https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html
-https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html
-https://www.w3.org/WAI/WCAG22/Understanding/focus-visible.html
+## CLI 与 CI 的真实边界
+
+```sh
+node tools/check-snapshot.cjs my-snapshot.json > report.json
+```
+
+- `0`：所有可判断、非豁免文字颜色对通过；禁用态建议不是规范失败。
+- `1`：至少一个支持的非豁免文字颜色对未达目标。
+- `2`：输入无效，或有不支持／不完整项；不能算通过。
+
+附带 Actions 安装依赖并运行自动化测试。项目应先决定如何记录页面版本与状态，再纳入自己**重新捕获**的快照。过期快照通过，不代表今天的 UI 通过。
+
+## 格式与迁移
+
+快照 `schemaVersion: 1` 与配色导出 `schemaVersion: 2` 是不同格式。配色导出保留两个主题、每主题显式不透明底色及假设。v0.1 配色可留作参考，但本版没有自动配色导入／迁移界面。不要将配色导出粘贴到快照导入区，也不能从旧配色推断真实底色。
+
+## 计算与范围
+
+采用 WCAG 2 sRGB 相对亮度。普通文字 4.5:1；字号至少 24 CSS px，或至少 18.6667 CSS px 且字重 ≥700 时为 3:1。实验区非文字行的 3:1 是颜色参考，不代表完整条款。使用完整精度判断，显示 HEX 与比率才取整。
+
+- [WCAG 文字对比](https://www.w3.org/WAI/WCAG22/Understanding/contrast-minimum.html)
+- [非文字对比](https://www.w3.org/WAI/WCAG22/Understanding/non-text-contrast.html)
+- [APCA 研究](https://git.apcacontrast.com/)
+
+## 验证
+
+21 项自动化测试通过。真实桌面浏览器已检查键盘焦点、中英切换、导入结果状态、JSON/CSS 复制与报告下载。具体范围和未验证项目见 [QA.md](QA.md)。
 
 ## 许可
 
-[MIT 许可证](LICENSE) · Copyright © 2026 Liyan Chen。
+本仓库自身代码为 [MIT](LICENSE)，© 2026 Liyan Chen。不重新分发 APCA 实现。
