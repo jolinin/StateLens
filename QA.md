@@ -3,7 +3,7 @@
 Observed on 2026-10-26 against the public demo.
 
 ## Passed
-- `npm test`: 21 Node/jsdom tests, including parser and alpha precision, thresholds, unsupported input, CLI exit codes, collector privacy/painting-bound checks, safe JSON rendering, and repeated focus binding.
+- `npm test`: 22 Node/jsdom tests, including parser and alpha precision, thresholds, unsupported input, CLI exit codes, collector privacy/painting-bound checks, safe JSON rendering, and repeated focus binding.
 - Actual desktop cloud-browser navigation to the public demo; both language views render with the concise copy. Screenshots in both READMEs are actual browser captures.
 - Tab from the light input to its button activates the light focus row; Tab out of both specimens removes it.
 - Synthetic snapshot example distinguishes PASS, EXEMPT with readability advice, and UNSUPPORTED with no ratio/pass badge.

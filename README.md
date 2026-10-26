@@ -73,7 +73,7 @@ WCAG 2 sRGB relative luminance; text targets 4.5:1, or 3:1 for at least 24 CSS p
 
 ## Validation
 
-21 automated tests passed. Desktop browser checks covered keyboard focus, language switching, snapshot statuses, copying JSON/CSS and report download. See [QA.md](QA.md) for scope and remaining gaps.
+22 automated tests passed. Desktop browser checks covered keyboard focus, language switching, snapshot statuses, copying JSON/CSS and report download. See [QA.md](QA.md) for scope and remaining gaps.
 
 ## License
 

@@ -73,7 +73,7 @@ node tools/check-snapshot.cjs my-snapshot.json > report.json
 
 ## 验证
 
-21 项自动化测试通过。真实桌面浏览器已检查键盘焦点、中英切换、导入结果状态、JSON/CSS 复制与报告下载。具体范围和未验证项目见 [QA.md](QA.md)。
+22 项自动化测试通过。真实桌面浏览器已检查键盘焦点、中英切换、导入结果状态、JSON/CSS 复制与报告下载。具体范围和未验证项目见 [QA.md](QA.md)。
 
 ## 许可
 
